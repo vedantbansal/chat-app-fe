@@ -56,7 +56,7 @@ function VerifyOTP() {
                     );
                 }
                 else {
-                    // navigate("/chats");
+                    navigate("/chats");
                     response.json().then(data => {
 
                         delete data.response
