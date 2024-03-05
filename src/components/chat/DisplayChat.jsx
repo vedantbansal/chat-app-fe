@@ -10,6 +10,7 @@ function DisplayChat() {
     const receiver = useSelector(state => state.selectedUser.user)
     const dispatch = useDispatch()
     const chats = useSelector(state => state.chat.chat)
+    const message = JSON.parse(localStorage.getItem('message'));
 
     useEffect(() => {
         async function fetchAndDisplayUserChat() {
@@ -20,17 +21,16 @@ function DisplayChat() {
         if (sender && receiver) {
             fetchAndDisplayUserChat();
         }
-    }, [receiver,dispatch]);
+    }, [receiver, dispatch]);
 
     useEffect(() => {
         // chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-        chatAreaRef.current.scrollIntoView({ behavior: "smooth"})
+        chatAreaRef.current.scrollIntoView({ behavior: "smooth" })
     }, [chats]);
-    
 
     return (
         <div ref={chatAreaRef} className='w-full h-full'>
-                {chats?.map(chat => <DisplayMessage key={chat.id} userid={sender.id} senderId={chat.senderId} content={chat.content} />)}
+            {chats?.map(chat => <DisplayMessage key={chat.id} userid={sender.id} senderId={chat.senderId} content={chat.content} />)}
         </div>
     )
 }

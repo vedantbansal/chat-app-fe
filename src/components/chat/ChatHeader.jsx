@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { VCIcon, ProfileImage } from '../../assets/'
 import { useSelector } from 'react-redux'
 

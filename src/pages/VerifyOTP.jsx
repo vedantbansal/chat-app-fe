@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { ErrorComponent } from '../components';
 import conf from '../conf/conf';
+import socketService from '../socket/config';
 
 function VerifyOTP() {
     const [otp, setOtp] = useState(['', '', '', '']);
@@ -57,10 +58,10 @@ function VerifyOTP() {
                 }
                 else {
                     response.json().then(data => {
-                        
                         delete data.response
                         localStorage.setItem("session", JSON.stringify(data))
                     })
+                    socketService.onConnected()
                     navigate("/chats");
                 }
             }).catch(error => console.log(error));

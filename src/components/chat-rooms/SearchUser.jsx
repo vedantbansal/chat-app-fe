@@ -29,7 +29,10 @@ function SearchUser() {
         });
         const data = await user.json();
         dispatch(setSelectedUser(data));
-        // dispatch(setChat(null))
+        const notificationIcon =  document.getElementById(userId).children[0].children[2];
+        if(notificationIcon.style.visibility==="visible"){
+            notificationIcon.style.visibility="hidden";
+        }
     }
 
 
