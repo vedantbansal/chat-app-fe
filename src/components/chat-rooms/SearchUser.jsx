@@ -4,6 +4,7 @@ import conf from '../../conf/conf';
 import UserCard from './UserCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedUser } from '../../feature/chat/selectedUserSlice';
+import { setChat } from '../../feature/chat/chatSlice';
 
 function SearchUser() {
 
@@ -28,6 +29,7 @@ function SearchUser() {
         });
         const data = await user.json();
         dispatch(setSelectedUser(data));
+        // dispatch(setChat(null))
     }
 
 

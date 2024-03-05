@@ -20,16 +20,15 @@ function DisplayChat() {
         if (sender && receiver) {
             fetchAndDisplayUserChat();
         }
-    }, [receiver, dispatch, chats]);
-
+    }, [receiver,dispatch, chats]);
 
     useEffect(() => {
         chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }, [chats]);
 
     return (
-        <div ref={chatAreaRef} className='w-full'>
-            {chats?.map(chat => <DisplayMessage key={chat.content} userid={sender.id} senderId={chat.senderId} content={chat.content} />)}
+        <div ref={chatAreaRef} className='w-full h-full'>
+                {chats?.map(chat => <DisplayMessage key={chat.id} userid={sender.id} senderId={chat.senderId} content={chat.content} />)}
         </div>
     )
 }
