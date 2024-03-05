@@ -1,7 +1,12 @@
 import React from 'react'
 import { AttachmentIcon, SendIcon } from '../../assets'
+import { useSelector } from 'react-redux'
 
 function ChatFooter() {
+    const selectedUser = useSelector(state => state.selectedUser.user)
+    if (!selectedUser) {
+        return null
+    }
     return (
         <div className='flex h-16'>
             <div className='w-full h-16 flex justify-center place-items-center py-1 px-3 '>

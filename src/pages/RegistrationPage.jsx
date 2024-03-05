@@ -50,14 +50,12 @@ function RegistrationPage() {
         }
         else {
             setSubmitted(true);
-            // setError(false);
 
             let userCredentials = {
                 "firstName": `${firstName}`,
                 "lastName": `${lastName}`,
                 "email": `${email}`,
                 "password": `${password}`
-
             }
 
             fetch(`${conf.baseURL}/verify-email?email=${email}`, {

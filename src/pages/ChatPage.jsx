@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChatHeader, ChatFooter, SearchUser} from '../components'
+import { ChatHeader, ChatFooter, SearchUser, DisplayChat} from '../components'
 function ChatPage() {
     return (
         <div className='flex flex-row h-screen bg-slate-100'>
@@ -9,7 +9,7 @@ function ChatPage() {
             </div>
             <div className='flex flex-col rounded-r-xl bg-white w-2/3 my-10 mr-16'>
                 <div className='border-b-2 border-slate-100 h-1/12' ><ChatHeader/></div>
-                {/* <div className='flex-1  h-10/12'><DisplayChat receiver={'65e35e9afe18276f7766e793'} sender={selectedUser}/></div> */}
+                <div className='flex-1  h-10/12'><DisplayChat/></div>
                 <div className='border-t-2 border-slate-100 mb-1 h-1/12' aria-disabled ><ChatFooter /></div>
             </div>
         </div>

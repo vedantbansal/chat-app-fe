@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { VCIcon, ProfileImage } from '../../assets/'
 import { useSelector } from 'react-redux'
 
-function ChatHeader({ user }) {
+function ChatHeader() {
     const selectedUser = useSelector(state => state.selectedUser.user)
     if (!selectedUser) {
         return null
     }
-
     return (
         <div className='flex h-16'>
             <div className='flex flex-none w-16 h-16 px-2 place-items-center justify-center'>
