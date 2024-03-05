@@ -20,11 +20,13 @@ function DisplayChat() {
         if (sender && receiver) {
             fetchAndDisplayUserChat();
         }
-    }, [receiver,dispatch, chats]);
+    }, [receiver,dispatch]);
 
     useEffect(() => {
-        chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+        // chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+        chatAreaRef.current.scrollIntoView({ behavior: "smooth"})
     }, [chats]);
+    
 
     return (
         <div ref={chatAreaRef} className='w-full h-full'>

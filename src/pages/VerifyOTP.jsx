@@ -56,12 +56,12 @@ function VerifyOTP() {
                     );
                 }
                 else {
-                    navigate("/chats");
                     response.json().then(data => {
-
+                        
                         delete data.response
                         localStorage.setItem("session", JSON.stringify(data))
                     })
+                    navigate("/chats");
                 }
             }).catch(error => console.log(error));
         }
