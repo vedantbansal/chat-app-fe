@@ -1,5 +1,5 @@
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, Navigate } from 'react-router-dom';
-import {LoginPage, VerifyOTP, RegistrationPage, ChatPage} from './pages/index'
+import {LoginPage, VerifyOTP, RegistrationPage, ChatPage, VideoCallPage} from './pages/index'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -8,6 +8,7 @@ const router = createBrowserRouter(
       <Route path='login' element={<LoginPage/>} />
       <Route path='chats' element={<ChatPage />} />
       <Route path='verify' element={<VerifyOTP />} />
+      <Route path='vc' element={<VideoCallPage />} />
       <Route path='/' element={<Navigate to='register' />}/>
     </Route>
 
