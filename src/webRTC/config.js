@@ -13,7 +13,7 @@ const servers = {
 const showVideo = async (peerConnection) => {
     const remoteStream = new MediaStream()
 
-    const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     document.getElementById('user-1').srcObject = remoteStream
     document.getElementById('user-2').srcObject = localStream
 
