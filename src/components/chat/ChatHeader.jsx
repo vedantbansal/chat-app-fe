@@ -11,7 +11,7 @@ function ChatHeader() {
     }
     const handleClick = (e) =>{
         e.preventDefault()
-        navigate('/vc')
+        navigate('/vc',{state:"caller"})
     }
     return (
         <div className='flex h-16'>
