@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { createAnswer, createPeerConnection, toggleCamera } from '../../webRTC/config';
+import { createAnswer, createPeerConnection, toggleCamera, onDisconnect } from '../../webRTC/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { setIceCandidates, setPeerConnection, setPeerRemoteAnswer } from '../../feature/webRTC/peerSlice';
+import socketService from '../../socket/config';
 
 function VideoCall() {
     const participant = useLocation().state
@@ -18,7 +19,6 @@ function VideoCall() {
             if (remoteDesc && remoteDesc.type === 'answer') {
                 try {
                     dispatch(setPeerRemoteAnswer(remoteDesc.info))
-
                 } catch (error) {
                     console.error('Error setting remote description:', error);
                 }
@@ -26,8 +26,6 @@ function VideoCall() {
             if (remoteDesc && remoteDesc.type === 'candidate') {
                 try {
                     dispatch(setIceCandidates(JSON.parse(remoteDesc.info)))
-
-                    console.log(peerConnection)
                 } catch (error) {
                     console.error('Error setting ice candidates description:', error);
                 }
@@ -57,10 +55,11 @@ function VideoCall() {
         toggleCamera(video)
     }
 
-    const endCall =() => {
-        peerConnection.close()
+    const endCall = () => {
+        socketService.sendVCMessage("Close connection", 'close', remoteDesc.senderId)
+        onDisconnect()
     }
-    
+
     return (
 
         <div className='h-full w-full flex justify-center relative z-0 '>
@@ -69,8 +68,8 @@ function VideoCall() {
                 <video id="user-2" autoPlay playsInline className="h-1/5 w-1/6 rounded-xl"></video>
             </div>
             <div className='h-1/5 w-full absolute z-40 flex place-self-end place-items-center justify-center'>
-                <div className={`rounded-full h-16 w-16 cursor-pointer m-2 ${mic?'bg-slate-300':'bg-red-500'}`} onClick={toggleMic}></div>
-                <div className={`rounded-full h-16 w-16 cursor-pointer m-2 ${video?'bg-slate-300':'bg-red-500'}`} onClick={toggleVideo}></div>
+                <div className={`rounded-full h-16 w-16 cursor-pointer m-2 ${mic ? 'bg-slate-300' : 'bg-red-500'}`} onClick={toggleMic}></div>
+                <div className={`rounded-full h-16 w-16 cursor-pointer m-2 ${video ? 'bg-slate-300' : 'bg-red-500'}`} onClick={toggleVideo}></div>
                 <div className='rounded-full h-16 w-16 cursor-pointer m-2 bg-red-500' onClick={endCall}></div>
             </div>
 

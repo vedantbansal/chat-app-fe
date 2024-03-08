@@ -4,6 +4,7 @@ import { Stomp } from '@stomp/stompjs';
 import store from "../store/store";
 import { addChat } from "../feature/chat/chatSlice";
 import { setPeerDesc } from "../feature/webRTC/peerSlice";
+import { onDisconnect } from "../webRTC/config";
 
 export class SocketService {
 
@@ -47,7 +48,6 @@ export class SocketService {
                 type: type,
                 info: messageContent,
             };
-            // console.log("VCMESSAGE", JSON.stringify(vcMessage))
             this.stompClient.send(`/app/vc`, {}, JSON.stringify(vcMessage));
         }
     }
@@ -80,8 +80,9 @@ export class SocketService {
             vcMessage.info = remoteDesc
             store.dispatch(setPeerDesc(vcMessage))
         }else if(vcMessage.type === 'candidate'){
-            // console.log(JSON.parse(vcMessage.info))
             store.dispatch(setPeerDesc(vcMessage))
+        }else if(vcMessage.type === 'close'){
+            onDisconnect()
         }
 
     }
