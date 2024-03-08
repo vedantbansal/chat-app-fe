@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import {  useNavigate } from 'react-router';
 import { ErrorComponent } from '../components';
 import conf from '../conf/conf';
 
-function VerifyOTP() {
+function VerifyOTP({location: userDetails}) {
     const [otp, setOtp] = useState(['', '', '', '']);
     const inputRefs = useRef([]);
-    const location = useLocation();
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -36,7 +35,7 @@ function VerifyOTP() {
             setSubmitted(true);
 
             let userCredentials = {
-                ...location.state.userCredentials,
+                ...userDetails,
                 "otp": parseInt(otp.join(''))
             }
 
@@ -56,7 +55,7 @@ function VerifyOTP() {
                     );
                 }
                 else {
-                    // navigate("/chats");
+                    navigate("/chats");
                     response.json().then(data => {
 
                         delete data.response
@@ -68,7 +67,7 @@ function VerifyOTP() {
     };
 
     const handleResend = async (e) => {
-        fetch(`${conf.baseURL}/verify-email?email=${location.state.userCredentials.email}`, {
+        fetch(`${conf.baseURL}/verify-email?email=${userDetails.email}`, {
             method: 'POST',
             mode: 'cors'
         }).then(response => {

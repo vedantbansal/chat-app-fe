@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import conf from '../conf/conf';
 import { ErrorComponent } from '../components';
+import VerifyOTP from './VerifyOTP';
 
 function RegistrationPage() {
     const [firstName, setFirstName] = useState("");
@@ -12,7 +13,7 @@ function RegistrationPage() {
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const navigate = useNavigate();
+    const [showVerifyPage, setShowVerifyPage] = useState(false)
 
     const handleFirstName = (e) => {
         setFirstName(e.target.value);
@@ -50,16 +51,6 @@ function RegistrationPage() {
         }
         else {
             setSubmitted(true);
-            // setError(false);
-
-            let userCredentials = {
-                "firstName": `${firstName}`,
-                "lastName": `${lastName}`,
-                "email": `${email}`,
-                "password": `${password}`
-
-            }
-
             fetch(`${conf.baseURL}/verify-email?email=${email}`, {
                 method: 'POST',
                 mode: 'cors'
@@ -71,14 +62,27 @@ function RegistrationPage() {
                     );
                 }
                 else {
-
-                    navigate("/verify", { state: { userCredentials } });
-                    // history.pushState({}, '', '/verify');            
+                    setShowVerifyPage(true)           
                 }
 
             }).catch(error => console.log(error));
         }
     };
+    
+    //SHow the verification page
+    if(showVerifyPage){
+        let userCredentials = {
+            "firstName": `${firstName}`,
+            "lastName": `${lastName}`,
+            "email": `${email}`,
+            "password": `${password}`
+        }
+        return(
+            <>
+            <VerifyOTP location={userCredentials}/>
+            </>
+        )
+    }
 
     return (
 
