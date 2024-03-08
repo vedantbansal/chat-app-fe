@@ -3,6 +3,8 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import store from "../store/store";
 import { addChat } from "../feature/chat/chatSlice";
+import { setPeerDesc } from "../feature/webRTC/peerSlice";
+import { onDisconnect } from "../webRTC/config";
 
 export class SocketService {
 
@@ -14,13 +16,13 @@ export class SocketService {
     }
 
     onConnected = () => {
-        const subscribeUrl = `/user/${this.user.id}/queue/messages`
-        const url = String(conf.baseURL)
-        this.stompClient.subscribe(String(subscribeUrl), this.onMessageReceived);
+        const messageSubscribeUrl = `/user/${this.user.id}/queue/messages`
+        const vcSubscribeUrl = `/user/${this.user.id}/queue/vc`
+        this.stompClient.subscribe(String(messageSubscribeUrl), this.onChatMessageReceived);
+        this.stompClient.subscribe(String(vcSubscribeUrl), this.onVCMessageReceived);
     }
 
     sendMessage(messageContent, recipientId) {
-
         if (messageContent && this.stompClient) {
             const chatMessage = {
                 senderId: this.user.id,
@@ -36,7 +38,21 @@ export class SocketService {
         }
     }
 
-    onMessageReceived = (payload) => {
+    sendVCMessage(messageContent, type, recipientId) {
+        if (messageContent && this.stompClient) {
+            const vcMessage = {
+                senderId: this.user.id,
+                firstName: this.user.firstName,
+                lastName: this.user.lastName,
+                recipientId: recipientId,
+                type: type,
+                info: messageContent,
+            };
+            this.stompClient.send(`/app/vc`, {}, JSON.stringify(vcMessage));
+        }
+    }
+
+    onChatMessageReceived = (payload) => {
         const state = store.getState();
         const chatMessage = JSON.parse(payload.body)
         if (chatMessage.senderId === state.selectedUser.user.id) {
@@ -44,6 +60,31 @@ export class SocketService {
         } else {
             document.getElementById(chatMessage.senderId).children[0].children[2].style.visibility = "visible";
         }
+    }
+
+    onVCMessageReceived = (payload) => {
+        const vcMessage = JSON.parse(payload.body)
+        const remoteDesc = new RTCSessionDescription()
+
+        if (vcMessage.type === 'offer') {
+            if (window.confirm("Answer Call")) {
+                remoteDesc.sdp = vcMessage.info
+                remoteDesc.type = 'offer'
+                vcMessage.info = remoteDesc
+                store.dispatch(setPeerDesc(vcMessage))
+
+            }
+        } else if (vcMessage.type === 'answer') {
+            remoteDesc.sdp = vcMessage.info
+            remoteDesc.type = 'answer'
+            vcMessage.info = remoteDesc
+            store.dispatch(setPeerDesc(vcMessage))
+        }else if(vcMessage.type === 'candidate'){
+            store.dispatch(setPeerDesc(vcMessage))
+        }else if(vcMessage.type === 'close'){
+            onDisconnect()
+        }
+
     }
 
     onError() {

@@ -5,7 +5,7 @@ import SearchUser from "./chat-rooms/SearchUser"
 import UserCard from "./chat-rooms/UserCard"
 import DisplayChat from "./chat/DisplayChat"
 import DisplayMessage from "./chat/DisplayMessage"
-
+import VideoCall from "./video-call/VideoCall"
 export {
     ErrorComponent,
     ChatHeader,
@@ -13,5 +13,6 @@ export {
     SearchUser,
     UserCard,
     DisplayChat,
-    DisplayMessage
+    DisplayMessage,
+    VideoCall
 }
