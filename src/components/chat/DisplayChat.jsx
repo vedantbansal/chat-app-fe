@@ -10,8 +10,8 @@ function DisplayChat() {
     const receiver = useSelector(state => state.selectedUser.user)
     const dispatch = useDispatch()
     const chats = useSelector(state => state.chat.chat)
-    const message = JSON.parse(localStorage.getItem('message'));
 
+    //Fetch the previous chats whenever a new user is selected
     useEffect(() => {
         async function fetchAndDisplayUserChat() {
             const userChatResponse = await fetch(`${conf.baseURL}/messages/${receiver.id}/${sender.id}`);
@@ -23,14 +23,16 @@ function DisplayChat() {
         }
     }, [receiver, dispatch]);
 
+    //Scroll to bottom of chat
     useEffect(() => {
-        // chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-        chatAreaRef.current.scrollIntoView({ behavior: "smooth" })
+        chatAreaRef.current.scrollIntoView({ behavior: "auto" })
     }, [chats]);
 
     return (
-        <div ref={chatAreaRef} className='w-full h-full'>
+        <div className='w-full h-full' >
+            {/* Display Each each chat message */}
             {chats?.map(chat => <DisplayMessage key={chat.id} userid={sender.id} senderId={chat.senderId} content={chat.content} />)}
+            <div ref={chatAreaRef} />
         </div>
     )
 }
