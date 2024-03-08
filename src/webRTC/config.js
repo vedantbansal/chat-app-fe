@@ -9,11 +9,24 @@ const servers = {
         }
     ]
 }
+let localStream
+
+let constraints = {
+    video:{
+        width:{ideal:1920, max:1920},
+        height:{ideal:1080, max:1080},
+    },
+    audio:false
+}
+
+const toggleCamera = (videoStatus) =>{
+    localStream.getTracks().find(track => track.kind === 'video').enabled = videoStatus
+}
 
 const showVideo = async (peerConnection) => {
     const remoteStream = new MediaStream()
 
-    const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    localStream = await navigator.mediaDevices.getUserMedia(constraints)
     document.getElementById('user-1').srcObject = remoteStream
     document.getElementById('user-2').srcObject = localStream
 
@@ -63,5 +76,6 @@ const createAnswer = async () => {
 
 export {
     createPeerConnection,
-    createAnswer
+    createAnswer,
+    toggleCamera
 }
