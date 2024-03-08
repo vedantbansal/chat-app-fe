@@ -14,8 +14,10 @@ function VideoCall() {
     const [video, setVideo] = useState(true)
     const dispatch = useDispatch()
 
+    //Save the details of peerconnection
     useEffect(() => {
         const setRemoteDescription = async () => {
+            // Save the answer sent by peer
             if (remoteDesc && remoteDesc.type === 'answer') {
                 try {
                     dispatch(setPeerRemoteAnswer(remoteDesc.info))
@@ -23,21 +25,20 @@ function VideoCall() {
                     console.error('Error setting remote description:', error);
                 }
             }
+            // Save the ice candidates sent by peer
             if (remoteDesc && remoteDesc.type === 'candidate') {
                 try {
                     dispatch(setIceCandidates(JSON.parse(remoteDesc.info)))
                 } catch (error) {
                     console.error('Error setting ice candidates description:', error);
                 }
-
             }
         };
-
         setRemoteDescription();
     }, [remoteDesc]);
 
+    //Create an offer on starting a call or create answer on receiving a call and answering it
     useMemo(() => {
-
         if (!peerConnection && participant === 'caller') {
             createPeerConnection(selectedUser.id)
         } else if (participant === 'receiver') {
@@ -48,11 +49,10 @@ function VideoCall() {
 
     const toggleMic = () => {
         setMic(!mic)
-
     }
     const toggleVideo = () => {
+        toggleCamera(!video)
         setVideo(!video)
-        toggleCamera(video)
     }
 
     const endCall = () => {
@@ -61,7 +61,6 @@ function VideoCall() {
     }
 
     return (
-
         <div className='h-full w-full flex justify-center relative z-0 '>
             <video id="user-1" autoPlay playsInline className="h-full w-full absolute z-10 rounded-xl"></video>
             <div className='relative z-10 h-full w-full flex place-items-end justify-end '>
@@ -72,7 +71,6 @@ function VideoCall() {
                 <div className={`rounded-full h-16 w-16 cursor-pointer m-2 ${video ? 'bg-slate-300' : 'bg-red-500'}`} onClick={toggleVideo}></div>
                 <div className='rounded-full h-16 w-16 cursor-pointer m-2 bg-red-500' onClick={endCall}></div>
             </div>
-
         </div>
     );
 }
