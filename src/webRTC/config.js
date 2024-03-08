@@ -1,4 +1,4 @@
-import { setPeerConnection } from "../feature/webRTC/peerSlice"
+import { setPeerConnection, setPeerDesc } from "../feature/webRTC/peerSlice"
 import socketService from "../socket/config"
 import store from "../store/store"
 
@@ -9,17 +9,18 @@ const servers = {
         }
     ]
 }
-let localStream
 
 let constraints = {
-    video:{
-        width:{ideal:1920, max:1920},
-        height:{ideal:1080, max:1080},
+    video: {
+        width: { ideal: 1920, max: 1920 },
+        height: { ideal: 1080, max: 1080 },
     },
-    audio:false
+    audio: false
 }
 
-const toggleCamera = (videoStatus) =>{
+let localStream
+
+const toggleCamera = (videoStatus) => {
     localStream.getTracks().find(track => track.kind === 'video').enabled = videoStatus
 }
 
@@ -71,11 +72,27 @@ const createAnswer = async () => {
             socketService.sendVCMessage(JSON.stringify(event.candidate), 'candidate', state.peerDesc.peerDesc.senderId)
         }
     }
-    // return peerConnection;
 }
+
+
+const onDisconnect = () => {
+    const peerConnection = store.getState().peerDesc.peerConnection
+    peerConnection.getLocalStreams()[0].getTracks().forEach(track => track.stop())
+    peerConnection.ontrack = null
+    peerConnection.onremovetracl = null
+    peerConnection.onicecandidate = null;
+    peerConnection.oniceconnectionstatechange = null;
+    peerConnection.onsignalingstatechange = null;
+    peerConnection.close();
+    store.dispatch(setPeerConnection(null))
+    store.dispatch(setPeerDesc(null))
+    window.history.back()
+}
+
 
 export {
     createPeerConnection,
     createAnswer,
-    toggleCamera
+    toggleCamera,
+    onDisconnect
 }
