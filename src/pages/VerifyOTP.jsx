@@ -59,9 +59,9 @@ function VerifyOTP({location: userDetails}) {
                     response.json().then(data => {
                         delete data.response
                         localStorage.setItem("session", JSON.stringify(data))
+                        socketService.onConnected()
+                        navigate("/chats");
                     })
-                    socketService.onConnected()
-                    navigate("/chats");
                 }
             }).catch(error => console.log(error));
         }
