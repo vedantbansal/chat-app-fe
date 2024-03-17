@@ -87,7 +87,7 @@ function VerifyOTP({location: userDetails}) {
         <div className='h-screen flex justify-center pt-32'>
             <div className='w-3/5 p-5'>
                 <h1 className='text-4xl font-font-serif font-bold  p-4'>Verify Email</h1>
-                <p className='text-lg font-font-serif p-2'>The verification code was sent to this email address: . When you get the code, type the code into the field to confirm your identity.</p>
+                <p className='text-lg font-font-serif p-2'>The verification code was sent to this email address: ${userDetails.email}. When you get the code, type the code into the field to confirm your identity.</p>
                 <div className='h-16 flex flex-row justify-center'>
                     {otp.map((digit, index) => (
                         <input
