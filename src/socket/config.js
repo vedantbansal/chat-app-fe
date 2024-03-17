@@ -3,7 +3,7 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import store from "../store/store";
 import { addChat } from "../feature/chat/chatSlice";
-import { setPeerDesc } from "../feature/webRTC/peerSlice";
+import { setIceCandidates, setPeerDesc } from "../feature/webRTC/peerSlice";
 import { onDisconnect } from "../webRTC/config";
 
 export class SocketService {
@@ -80,7 +80,17 @@ export class SocketService {
             vcMessage.info = remoteDesc
             store.dispatch(setPeerDesc(vcMessage))
         }else if(vcMessage.type === 'candidate'){
-            store.dispatch(setPeerDesc(vcMessage))
+            let count = 0
+            let iceCandidateTimeOut = setInterval(()=>{
+                if(store.getState().peerDesc.peerConnection || count>=29){
+                    clearInterval(iceCandidateTimeOut)
+                }else{
+                    count++
+                }
+            },500)
+            if(store.getState().peerDesc.peerConnection){
+                store.dispatch(setIceCandidates(JSON.parse(vcMessage.info)))
+            }
         }else if(vcMessage.type === 'close'){
             onDisconnect()
         }
